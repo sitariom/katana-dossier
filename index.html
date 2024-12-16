@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>DOSSIÊ: 3º Sargento Katana Rasputin</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @keyframes scanline {
+            0% {
+                transform: translateY(-100%);
+            }
+            100% {
+                transform: translateY(100%);
+            }
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 2px) }
+            40% { transform: translate(-2px, -2px) }
+            60% { transform: translate(2px, 2px) }
+            80% { transform: translate(2px, -2px) }
+            100% { transform: translate(0) }
+        }
+
+        :root {
+            --primary-color: #00ff00;
+            --secondary-color: #003300;
+            --background-color: #000;
+            --text-color: #00ff00;
+            --warning-color: #ff0000;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: "Courier New", monospace;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+            text-shadow: 0 0 5px var(--primary-color);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 200%;
+            background: linear-gradient(
+                transparent 50%,
+                rgba(0, 255, 0, 0.25) 50%
+            );
+            background-size: 100% 4px;
+            animation: scanline 10s linear infinite;
+            pointer-events: none;
+            z-index: 1001;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 0 20px var(--primary-color);
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+        }
+
+        .warning {
+            color: var(--warning-color);
+            text-transform: uppercase;
+            font-weight: bold;
+            animation: blink 2s infinite;
+            margin: 20px 0;
+        }
+
+        .section {
+            margin: 20px 0;
+            padding: 10px;
+            border-left: 2px solid var(--primary-color);
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .redacted {
+            background-color: #000;
+            color: transparent;
+            position: relative;
+            display: inline-block;
+            user-select: none;
+        }
+
+        .redacted::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                45deg,
+                #000,
+                #000 10px,
+                #222 10px,
+                #222 20px
+            );
+        }
+
+        .icon {
+            color: var(--primary-color);
+            margin-right: 10px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 2px 8px;
+            border: 1px solid var(--primary-color);
+            margin: 5px 0;
+        }
+
+        .citation {
+            font-style: italic;
+            margin: 10px 0;
+            padding-left: 20px;
+            border-left: 2px solid var(--primary-color);
+        }
+
+        .glitch {
+            animation: glitch 0.5s infinite;
+            display: inline-block;
+        }
+
+        .terminal-line::before {
+            content: "> ";
+            color: var(--primary-color);
+        }
+
+		.image-classified-container {
+			position: relative;
+			width: 307.2px;
+			height: 537.6px;
+			margin: 10px auto;
+		}
+        .image-classified {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border: 2px solid var(--primary-color);
+            filter: blur(8px); /* Efeito de censura */
+        }
+
+        .image-id {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            color: var(--text-color);
+            background: rgba(0, 0, 0, 0.5);
+            padding: 2px 0;
+            font-size: 0.9em;
+        }
+
+        .subsection {
+            margin: 15px 0;
+            padding: 10px;
+            border-left: 2px dashed var(--primary-color);
+        }
+
+        .subsection-title {
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        ul {
+            list-style-type: square;
+            padding-left: 40px;
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            .image-classified-container {
+                width: 100px;
+                height: 100px;
+            }
+        }
+
+        /* Prefer Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="warning">
+                <i class="fas fa-exclamation-triangle icon"></i>
+                DOCUMENTO CLASSIFICADO - NÍVEL DE SEGURANÇA ALFA
+            </div>
+            <div class="image-classified-container">
+                <img src="KATANA_AVATAR.jpg" alt="Imagem Classificada" class="image-classified">
+                <div class="image-id">ID: MRN-789-454-21A</div>
+            </div>
+        </div>
+
+
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-user icon"></i>
+                PERFIL PESSOAL E HISTÓRICO
+            </div>
+            <div class="terminal-line">Nome: Katana Rasputin</div>
+            <div class="terminal-line">Idade: 37 anos</div>
+            <div class="terminal-line">Origem: Marciana (Ascendência mista asiática e eslava)</div>
+            <div class="terminal-line">Ex-Filiação: 987º Pelotão de Infantaria Terrestre, 4789º Batalhão de Reconhecimento e Garantia da Ordem Marciano</div>
+            <div class="status">Status Atual: Mercenária Independente (Alerta: Potencial Risco de Segurança)</div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-history icon"></i>
+                HISTÓRICO PRÉ-MILITAR
+            </div>
+            <p>Nascida no Setor 17 de Marte, área de classe trabalhadora. Pais: <span class="redacted">[NOMES REDACTED]</span>, operários na Instalação de Processamento Atmosférico 23.</p>
+            
+            <div class="citation">
+                "Katana demonstra habilidades físicas e de liderança excepcionais, mas tem dificuldade em se conectar emocionalmente com os colegas. Sua intensidade pode ser tanto um ativo quanto um obstáculo."
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-medal icon"></i>
+                CARREIRA MILITAR INICIAL
+            </div>
+            <p>Ingressou na Academia Militar de Marte aos 18 anos. Destacou-se em combate, estratégia e sobrevivência.</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-users icon"></i>
+                FIGURAS-CHAVE NA FORMAÇÃO DE RASPUTIN
+            </div>
+            
+            <div class="subsection">
+                <div class="subsection-title">
+                    Tenente Comandante Maria Odete Miranda (Instrutora Principal)
+                </div>
+                <div class="terminal-line">Avaliação oficial (Relatório de Treinamento, Ano <span class="redacted">[NOMES REDACTED]</span></div>
+                <div class="citation">
+                    "Cadete Rasputin demonstra aptidão física e tática sem precedentes. Contudo, sua incapacidade de trabalhar efetivamente em equipe é preocupante. Recomendo treinamento adicional em dinâmica de grupo."
+                </div>
+                <div class="terminal-line">Citação informal (Entrevista pós-afastamento de Rasputin):</div>
+                <div class="citation">
+                    "Eu sabia que ela seria problemática desde o início. Brilhante, sim, mas aquela intensidade… era como observar uma bomba-relógio."
+                </div>
+                <div class="terminal-line">Citação direta sobre Katana:</div>
+                <div class="citation">
+                    "Extremamente masculina… e o pior de tudo é que quando ela quer fazer coisas femininas fica pior ainda."
+                </div>
+                <div class="terminal-line">Impacto:</div>
+                <div class="citation">
+                    Miranda foi crucial na formação militar de Rasputin, reconhecendo seu potencial excepcional, mas também identificando suas falhas críticas. Sua avaliação influenciou significativamente o percurso de Katana na carreira militar.
+                </div>
+            </div>
+
+            <div class="subsection">
+                <div class="subsection-title">
+                    Cb Jenette Vasquez (Mentora e figura maternal)
+                </div>
+                <div class="terminal-line">Relatório de Treinamento (Ano <span class="redacted">[NOMES REDACTED]</span>):</div>
+                <div class="citation">
+                    "A Cadete Rasputin tem potencial para se tornar uma das melhores operativas que Marte já viu. Minha missão é garantir que ela não se autodestrua no processo."
+                </div>
+                <div class="terminal-line">Última mensagem registrada para Rasputin antes do desaparecimento:</div>
+                <div class="citation">
+                    "Lembre-se, garota: às vezes, a maior força está em saber quando recuar. Não deixe que sua obsessão por ser a melhor te cegue."
+                </div>
+                <div class="terminal-line">Citação direta sobre Katana:</div>
+                <div class="citation">
+                    "Ela precisa ser como eu. Estar pronta para chutar alguns traseiros e apanhar um pouco. Em qualquer hora, em qualquer lugar."
+                </div>
+                <div class="terminal-line">Impacto:</div>
+                <div class="citation">
+                    Vasquez tornou-se uma figura maternal para Rasputin, oferecendo orientação e apoio emocional que Katana não recebia de outras fontes. Seu desaparecimento há 15 anos teve um impacto psicológico profundo em Rasputin, possivelmente contribuindo para seu comportamento atual.
+                </div>
+            </div>
+
+            <div class="subsection">
+                <div class="subsection-title">
+                    2º SG Jordana Gleise (Ex-rival, atual aliada)
+                </div>
+                <div class="terminal-line">Avaliação de par (Academia Militar, Ano <span class="redacted">[NOMES REDACTED]</span>):</div>
+                <div class="citation">
+                    "Rasputin é competitiva ao extremo. Sua determinação é admirável, mas sua falta de espírito de equipe é um risco para futuras operações."
+                </div>
+                <div class="terminal-line">Postagem em rede social criptografada (Data:<span class="redacted">[NOMES REDACTED]</span>):</div>
+                <div class="citation">
+                    "K.R. está de volta à ativa, mas não oficialmente. Se você a encontrar, não subestime. Ela não é mais a mesma pessoa que conhecemos."
+                </div>
+                <div class="terminal-line">Citação direta sobre Katana:</div>
+                <div class="citation">
+                    "Se quer paz amém. Se quer guerra… chama a Katana."
+                </div>
+                <div class="terminal-line">Impacto:</div>
+                <div class="citation">
+                    A relação entre Gleise e Rasputin evoluiu de uma rivalidade intensa para uma aliança complexa. Gleise é uma das poucas pessoas que compreende verdadeiramente as capacidades e os demônios internos de Katana, tornando-se uma aliada valiosa e uma fonte de informações sobre o estado atual de Rasputin.
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-users-cog icon"></i>
+                DINÂMICA COM O 987º PELOTÃO (PRÉ-INCIDENTE)
+            </div>
+            <div class="terminal-line">Avaliação de Eficácia de Unidade (Ano<span class="redacted">[NOMES REDACTED]</span>):</div>
+            <div class="citation">
+                "O 987º Pelotão, sob a liderança do Sargento Rasputin, demonstra eficácia operacional excepcional. Contudo, a coesão social da unidade está abaixo do ideal. Rasputin lidera pelo exemplo e competência, não por conexão emocional."
+            </div>
+            <div class="terminal-line">Citações de membros do pelotão:</div>
+            <div class="citation">
+                Soldado A (Relatório oficial): "O Sargento Rasputin nos transformou na unidade mais eficiente do batalhão. Sua dedicação é inspiradora."
+            </div>
+            <div class="citation">
+                Soldado B (Conversa informal gravada): "Rasputin? Ela é uma máquina. Eficiente, letal, mas… fria. Não sei se ela se importa conosco ou apenas com a missão."
+            </div>
+            <div class="citation">
+                Soldado C (Diário pessoal recuperado): "Às vezes tenho medo da Sargento. Não do que ela possa fazer conosco, mas do que ela nos faz querer ser. É como se o conceito de 'impossível' não existisse para ela."
+            </div>
+            <div class="terminal-line">AVALIAÇÃO TÉCNICA DO PELOTÃO:</div>
+            <div class="citation">
+                Relatório de Desempenho (Último antes do Incidente):
+            </div>
+            <ul>
+                <li>Eficácia em combate: 98% (Top 1% de todas as unidades)</li>
+                <li>Taxas de sucesso em missões: 100%</li>
+                <li>Baixas em operações: 0%</li>
+                <li>Coesão de unidade: 72% (Abaixo da média, mas compensada pela eficácia)</li>
+            </ul>
+            <div class="citation">
+                Comentário do Avaliador: "O 987º, sob Rasputin, é uma força de elite incomparável. Contudo, a dependência excessiva nas capacidades do Sargento é um ponto de preocupação."
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-exclamation-triangle icon"></i>
+                INCIDENTE CRÍTICO
+            </div>
+            <div class="warning">
+                ALERTA: INFORMAÇÕES ALTAMENTE CENSURADAS
+            </div>
+            <div class="terminal-line">Operação <span class="redacted">[NOMES REDACTED]</span></div>
+            <div class="terminal-line">Data: <span class="redacted">[NOMES REDACTED]</span></div>
+            <div class="terminal-line">Local: <span class="redacted">[NOMES REDACTED]</span></div>
+            <div class="terminal-line">Detalhes conhecidos:</div>
+            <ul>
+                <li>Missão classificada como <span class="redacted">[NOMES REDACTED]</span></li>
+                <li>Duração prevista: <span class="redacted">[NOMES REDACTED]</span></li>
+                <li>Último contato: <span class="redacted">[NOMES REDACTED]</span></li>
+                <li>Sinal de socorro detectado após <span class="redacted">[NOMES REDACTED]</span> horas de silêncio</li>
+                <li>Equipe de resgate encontrou <span class="redacted">[NOMES REDACTED]</span></li>
+                <li>Única sobrevivente: Sargento Katana Rasputin</li>
+            </ul>
+            <div class="terminal-line">Citação do relatório de resgate:</div>
+            <div class="citation">
+                "Cenário <span class="redacted">[NOMES REDACTED]</span>. Rasputin encontrada <span class="redacted">[NOMES REDACTED]</span>. Repetia incoerentemente sobre <span class="redacted">[NOMES REDACTED]</span> e insistia que <span class="redacted">[NOMES REDACTED]</span> ainda estavam vivos."
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-brain icon"></i>
+                ESTADO PSICOLÓGICO PRÉ E PÓS-INCIDENTE
+            </div>
+            <div class="subsection">
+                <div class="subsection-title">
+                    Pré-Incidente:
+                </div>
+                <div class="terminal-line">Avaliação Psicológica (6 meses antes do Incidente):</div>
+                <div class="citation">
+                    "Sujeito demonstra dedicação excepcional à missão e alto nível de confiança. Tendências isolacionistas e dificuldade em formar conexões emocionais permanecem preocupantes, mas não impeditivas para o serviço."
+                </div>
+            </div>
+            <div class="subsection">
+                <div class="subsection-title">
+                    Pós-Incidente:
+                </div>
+                <div class="terminal-line">Relatório Psiquiátrico (2 meses após o Incidente):</div>
+                <div class="citation">
+                    "Paciente apresenta PTSD severo, episódios dissociativos e comportamento obsessivo-compulsivo relacionado aos eventos da Operação Fênix Escarlate. Recusa-se a aceitar a perda do pelotão. Risco elevado de comportamento autodestrutivo."
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-handshake icon"></i>
+                RELAÇÃO COM VASQUEZ E IMPACTO DE SEU DESAPARECIMENTO
+            </div>
+            <div class="terminal-line">Citação de Rasputin (Sessão de terapia, Ano<span class="redacted">[NOMES REDACTED]</span>):</div>
+            <div class="citation">
+                "Vasquez me ensinou que ser forte não é apenas sobre sobreviver, mas sobre viver por algo maior. Sem ela… às vezes me pergunto por que ainda estou lutando."
+            </div>
+            <div class="terminal-line">Análise comportamental pós-desaparecimento de Vasquez:</div>
+            <div class="citation">
+                "Sujeito demonstra aumento em comportamentos de risco e obsessão com missões 'impossíveis'. Possível tentativa de provar seu valor ou 'superar' a mentora desaparecida."
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-network-wired icon"></i>
+                STATUS E RELAÇÕES ATUAIS
+            </div>
+            <div class="terminal-line">Status Militar:</div>
+            <div class="citation">
+                Oficialmente afastada, opera como mercenária independente
+            </div>
+            <div class="terminal-line">Vigilância:</div>
+            <div class="citation">
+                Sob monitoramento constante das Forças de Segurança Marcianas
+            </div>
+
+            <div class="subsection">
+                <div class="subsection-title">
+                    Relações atuais:
+                </div>
+                <div class="terminal-line">Capitão Alexei Korolev:</div>
+                <div class="citation">
+                    Status: Contato não oficial, fornece missões extraoficiais
+                </div>
+                <div class="terminal-line">Citação recente (Comunicação interceptada):</div>
+                <div class="citation">
+                    "Rasputin é uma bomba-relógio, mas também nossa melhor chance em <span class="redacted">[NOMES REDACTED]</span>. Precisamos mantê-la ocupada e sob controle."
+                </div>
+            </div>
+
+            <div class="subsection">
+                <div class="subsection-title">
+                    2º SG Jordana Gleise:
+                </div>
+                <div class="terminal-line">Status:</div>
+                <div class="citation">
+                    Aliada cautelosa, ocasional parceira em operações
+                </div>
+                <div class="terminal-line">Relatório não oficial:</div>
+                <div class="citation">
+                    "Rasputin está à beira do abismo. Sua busca por respostas pode nos salvar ou nos destruir. Mantenho contato por precaução e… preocupação."
+                </div>
+            </div>
+
+            <div class="subsection">
+                <div class="subsection-title">
+                    Autoridades Militares Marcianas:
+                </div>
+                <div class="terminal-line">Status:</div>
+                <div class="citation">
+                    Relação tensa, vigilância ativa
+                </div>
+                <div class="terminal-line">Memorando interno:</div>
+                <div class="citation">
+                    "Manter Rasputin sob observação. Sua lealdade a Marte não está em questão, mas suas ações são imprevisíveis. Preparem protocolo de contenção, caso necessário."
+                </div>
+            </div>
+
+            <div class="subsection">
+                <div class="subsection-title">
+                    Comunidade Mercenária:
+                </div>
+                <div class="terminal-line">Status:</div>
+                <div class="citation">
+                    Respeitada e temida
+                </div>
+                <div class="terminal-line">Citação de mercenário anônimo:</div>
+                <div class="citation">
+                    "Se Rasputin está envolvida, a missão é séria. Ela não brinca em serviço. Dizem que ela busca algo além do pagamento… algo sobre um incidente no passado."
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-bullseye icon"></i>
+                OBJETIVOS ATUAIS (ANÁLISE COMPORTAMENTAL)
+            </div>
+            <ul>
+                <li>Descobrir a verdade sobre a Operação</li>
+                <li>Localizar informações sobre o paradeiro de Jenette Vasquez</li>
+                <li>Provar sua sanidade e valor para possível reintegração</li>
+                <li>Investigar possíveis conspirações nos altos escalões militares marcianos</li>
+                <li>Aperfeiçoar suas já excepcionais habilidades de combate</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-check-circle icon"></i>
+                AVALIAÇÃO FINAL
+            </div>
+            <p class="glitch">AVISO: CONTEÚDO ALTAMENTE SENSÍVEL</p>
+            <p>Katana Rasputin permanece um ativo valioso, porém volátil. Sua busca obsessiva por respostas e sua instabilidade emocional a tornam um risco potencial. No entanto, suas habilidades excepcionais e conhecimento interno a tornam inestimável para operações de alto risco. A influência contínua de figuras-chave como Miranda, Vasquez (mesmo em sua ausência) e Gleise molda significativamente seu comportamento e motivações atuais. Recomenda-se cautela extrema em qualquer interação ou uso de seus serviços, com atenção especial às suas conexões pessoais e passado traumático.</p>
+        </div>
+
+        <div class="warning">
+            <i class="fas fa-lock icon"></i>
+            [FIM DO DOCUMENTO]
+        </div>
+    </div>
+</body>
+</html>
